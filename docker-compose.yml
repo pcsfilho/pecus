@@ -1,0 +1,43 @@
+version: "3"
+services:
+  pecus:
+    build: .
+    image: pecus
+    container_name: pecus
+    restart: always
+    env_file: .env
+    environment:
+      - MONGO_USERNAME=$MONGO_USERNAME
+      - MONGO_URI=$MONGO_URI
+      - OPENAI_API_KEY=$OPENAI_API_KEY
+    ports:
+      - $PORT:3000
+    depends_on:
+      - pecusdb
+    volumes:
+      - ./pecus/:/app
+    networks:
+      - pecus-network
+    command: $DOCKER_START_COMMAND
+  pecusdb:
+    image: mongo:4.1.8-xenial
+    container_name: pecusdb
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    ports:
+      - "$MONGO_PORT:27017"
+    volumes:
+      - pecusdbdata:/data/db
+    networks:
+      - pecus-network
+networks:
+  pecus-network:
+    driver: bridge
+volumes:
+  pecusdbdata:
+    driver: local
+  pecusredisdata:
+    driver: local
