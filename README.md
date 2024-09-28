@@ -1,2 +1,3 @@
 # pecus
-Hackathon 2024
+
+Hackathon 2024 - PECUS
